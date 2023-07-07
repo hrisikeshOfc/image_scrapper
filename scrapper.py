@@ -1,0 +1,68 @@
+import os
+import time
+import logging
+import urllib.request
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+IMAGES_FOLDER = "images"
+
+class ImageScraper:
+    def __init__(self, search_input):
+        self.search_input = search_input
+        self.base_dir = os.path.join(os.getcwd(),IMAGES_FOLDER, search_input)
+  
+        self.driver = webdriver.Chrome()
+        self.wait = WebDriverWait(self.driver, 50)
+
+    def _create_directory(self):
+        os.makedirs(self.base_dir, exist_ok=True)
+        logging.info(f"Created directory: {self.base_dir}")
+
+    def _save_image(self, image_url, file_name):
+        try:
+            image_path = os.path.join(self.base_dir, file_name)
+            response = urllib.request.urlopen(image_url)
+            with open(image_path, 'wb') as f:
+                f.write(response.read())
+            logging.info(f"Saved image: {file_name}")
+        except Exception as e:
+            logging.error(f"Error saving image: {str(e)}")
+
+    def scrape_images(self, num_images):
+        self._create_directory()
+
+        try:
+            self.driver.get(f'https://www.google.com/search?q={self.search_input}&tbm=isch')
+            self.wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'rg_i')))
+
+            images = self.driver.find_elements(By.CLASS_NAME, 'rg_i')
+            logging.info(f"Found {len(images)} images for {self.search_input}")
+
+            while len(images) < num_images:
+                # Scroll to load more images
+                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(2)
+                images = self.driver.find_elements(By.CLASS_NAME, 'rg_i')
+                logging.info(f"Loaded {len(images)} images")
+
+            for index in range(num_images):
+                image = images[index]
+                image_url = image.get_attribute('src')
+                file_name = f"{self.search_input}_{index}.png"
+                self._save_image(image_url, file_name)
+
+        except Exception as e:
+            logging.error(f"Error scraping images: {str(e)}")
+
+        finally:
+            self.driver.quit()
+
+search_input = "moon"  #Enter search term
+num_images = 50 #Enter the number of images to download
+
+logging.basicConfig(level=logging.INFO)
+
+ImageScraper(search_input).scrape_images(num_images)

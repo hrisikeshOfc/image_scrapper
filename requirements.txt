@@ -1,0 +1,16 @@
+bs4==0.0.1
+cement==2.8.2
+flask-cors==4.0.0
+gunicorn==20.1.0
+opencv-python==4.8.0.74
+pathspec==0.10.1
+pillow==10.0.0
+pymongo==4.4.0
+pypiwin32==223
+pysocks==1.7.1
+requests==2.31.0
+selenium==4.10.0
+semantic-version==2.8.5
+six==1.14.0
+termcolor==1.1.0
+wcwidth==0.1.9
