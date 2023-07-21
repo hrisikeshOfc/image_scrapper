@@ -1,7 +1,7 @@
 import os
 import time
 from logger import logging
-import urllib.request
+from urllib import request
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -31,7 +31,7 @@ class ImageScraper:
     def _save_image(self, image_url, file_name):
         try:
             image_path = os.path.join(self.base_dir, file_name)
-            response = urllib.request.urlopen(image_url)
+            response = request.urlopen(image_url)
             with open(image_path, 'wb') as f:
                 f.write(response.read())
             logging.info(f"Saved image: {file_name}")
@@ -67,9 +67,3 @@ class ImageScraper:
         finally:
             self.driver.quit()
 
-# search_input = "moon"  #Enter search term
-# num_images = 50 #Enter the number of images to download
-
-
-
-# ImageScraper(search_input).scrape_images(num_images)
