@@ -11,11 +11,11 @@
     <form action="/scrape" method="POST">
       <div class="form-group">
         <label for="search_input">Search Query:</label>
-        <input type="text" class="form-control" id="search_input" name="search_input" required>
+        <input type="text" class="form-control" id="search_input" name="search_input" placeholder="Input query in text" required>
       </div>
       <div class="form-group">
         <label for="num_images">Number of Images:</label>
-        <input type="number" class="form-control" id="num_images" name="num_images" min="1" max="100" required>
+        <input type="number" class="form-control" id="num_images" name="num_images" min="1" max="100" placeholder="Total number of required images in numbers">
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
