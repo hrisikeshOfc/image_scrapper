@@ -1,20 +1,27 @@
 import os
 import time
-import logging
+from logger import logging
 import urllib.request
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
-IMAGES_FOLDER = "images"
+from constants import IMAGES_FOLDER
 
 class ImageScraper:
-    def __init__(self, search_input):
-        self.search_input = search_input
-        self.base_dir = os.path.join(os.getcwd(),IMAGES_FOLDER, search_input)
+    def __init__(self, search_input:str):
+        self.search_input = search_input.strip().lower()
+        self.base_dir = os.path.join(os.getcwd(),
+                                     IMAGES_FOLDER, 
+                                     self.search_input
+                                      )
+        
+        options = webdriver.ChromeOptions()
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--headless')
   
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(options=options)
         self.wait = WebDriverWait(self.driver, 50)
 
     def _create_directory(self):
@@ -60,9 +67,9 @@ class ImageScraper:
         finally:
             self.driver.quit()
 
-search_input = "moon"  #Enter search term
-num_images = 50 #Enter the number of images to download
+# search_input = "moon"  #Enter search term
+# num_images = 50 #Enter the number of images to download
 
-logging.basicConfig(level=logging.INFO)
 
-ImageScraper(search_input).scrape_images(num_images)
+
+# ImageScraper(search_input).scrape_images(num_images)
